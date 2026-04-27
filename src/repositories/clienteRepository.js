@@ -33,21 +33,24 @@ const clienteRepository = {
             conn.release()
         }
     },
-    editar: async (cliente, telefone, endereco) => {
+    editar: async (id, cliente, endereco, telefone) => {
         const conn = await connection.getConnection();
         try {
             conn.beginTransaction();
 
+            console.log();
+            
             const sqlCliente = 'UPDATE clientes SET Nome=?, Cpf=? WHERE Id=?';
-            const valuesCliente = [cliente.nome, cliente.cpf];
+            const valuesCliente = [cliente.nome, cliente.cpf, id];
             const [rowsCliente] = await conn.execute(sqlCliente, valuesCliente);
 
-            const sqlTel = 'UPDATE telefones SET Id_cliente=?, Numero=? WHERE Id=?';
-            const valuesTel = [rowsCliente.insertId, telefone.numero];
+            const sqlTel = 'UPDATE telefones SET Numero=? WHERE Id=?';
+            const valuesTel = [telefone.numero, id];
             const [rowsTel] = await conn.execute(sqlTel, valuesTel);
 
-            const sqlEndereco = 'UPDATE enderecos SET Id_cliente=?, Logradouro=?, Bairro=?, Numero=?, Complemento=?, Cidade=?, Uf=?, Cep=? WHERE Id=?';
-            const valuesEndereco = [rowsCliente.insertId, endereco.Logradouro, endereco.Bairro, endereco.Numero, endereco.Complemento, endereco.Cidade, endereco.Uf, endereco.Cep];
+            
+            const sqlEndereco = 'UPDATE enderecos SET Logradouro=?, Bairro=?, Numero=?, Complemento=?, Cidade=?, Uf=?, Cep=? WHERE Id=?';
+            const valuesEndereco = [ endereco.logradouro, endereco.bairro, endereco.numero, endereco.complemento, endereco.cidade, endereco.uf, endereco.cep, id];
             const [rowsEndereco] = await conn.execute(sqlEndereco, valuesEndereco);
 
             conn.commit();

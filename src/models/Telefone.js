@@ -37,6 +37,8 @@ export class Telefone {
     }
 
     #validarNumero(value) {
+        console.log(value);
+        
         if (!value && (value.trim().length < 9 || value.trim().length > 11)) {
             throw new Error('O campo "Numero" deve conter números positivos')
         }
@@ -62,6 +64,8 @@ export class Telefone {
         return new Telefone(dados.numero, null);
     }
     static editar(dados, id) {
-        return new Telefone(dados.numero, dados.idCliente, id);
+        console.log(dados.numTelefone);
+        
+        return new Telefone(dados.numTelefone, dados.idCliente, id);
     }
 }

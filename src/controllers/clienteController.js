@@ -49,24 +49,26 @@ const clienteController = {
         try {
             const id = Number(req.query.id);
             let { nome, cpf, numTelefone, cep, numCasa } = req.body;
-
+            ;
+            
             cpf = limparNumero(cpf);
             cep = limparNumero(cep);
             numTelefone = limparNumero(numTelefone);
 
+            let resp = await viaCep(cep)
 
             const cliente = Cliente.editar({ nome, cpf });
             const endereco = Endereco.editar({
                 cep,
-                logradouro: viaCep.logradouro,
-                bairro: viaCep.bairro,
+                logradouro: resp.logradouro,
+                bairro: resp.bairro,
                 numero: numCasa,
-                complemento: viaCep.complemento,
-                cidade: viaCep.localidade,
-                uf: viaCep.uf
+                complemento: resp.complemento,
+                cidade: resp.localidade,
+                uf: resp.uf
             });
             const telefone = Telefone.editar({ numTelefone });
-            const result = await clienteRepository.editar(id, { cliente, endereco, telefone });
+            const result = await clienteRepository.editar(id,  cliente, endereco, telefone);
             res.status(201).json({ result });
 
 
